@@ -1,0 +1,96 @@
+import {
+  bindEvent,
+  show,
+  hide,
+  handleFocus,
+  handleBlur,
+  removeFocusing,
+  handleShowPopper,
+  handleClosePopper,
+  setExpectedState,
+  destroyed,
+  debounceClose,
+  watchFocusing,
+  bindPopper,
+  focusHandler
+} from './index'
+import userPopper from '@opentiny/vue-renderless/common/deps/vue-popper'
+import { guid } from '@opentiny/vue-renderless/common/string'
+
+export const api = [
+  'state',
+  'bindEvent',
+  'hide',
+  'show',
+  'doDestroy',
+  'handleFocus',
+  'setExpectedState',
+  'debounceClose',
+  'handleShowPopper',
+  'handleClosePopper',
+  'setExpectedState',
+  'updatePopper',
+  'focusHandler'
+]
+
+const initState = ({ reactive, showPopper, popperElm, referenceElm, props }) =>
+  reactive({
+    showPopper,
+    popperElm,
+    referenceElm,
+    timeout: null,
+    focusing: false,
+    expectedState: undefined,
+    mounted: false,
+    tooltipId: guid('tiny-tooltip-', 4),
+    tabindex: props.tabindex
+  })
+
+export const renderless = (
+  props,
+  { watch, toRefs, reactive, onBeforeUnmount, onDeactivated, onMounted, onUnmounted },
+  { vm, emit, refs, slots, nextTick, parent }
+) => {
+  const api = {}
+  const popperParam = { emit, props, nextTick, toRefs, reactive, parent, refs }
+
+  Object.assign(popperParam, { slots, onBeforeUnmount, onDeactivated, watch })
+
+  const { showPopper, updatePopper, popperElm, referenceElm, doDestroy } = userPopper(popperParam)
+  const state = initState({ reactive, showPopper, popperElm, referenceElm, props })
+
+  Object.assign(api, {
+    state,
+    doDestroy,
+    updatePopper,
+    show: show(api),
+    hide: hide(api),
+    destroyed: destroyed({ state, api }),
+    bindPopper: bindPopper({ vm, refs, state, nextTick }),
+    watchFocusing: watchFocusing(state),
+    removeFocusing: removeFocusing(state),
+    handleBlur: handleBlur({ api, state }),
+    handleFocus: handleFocus({ api, state }),
+    debounceClose: debounceClose({ api, props }),
+    setExpectedState: setExpectedState({ api, state }),
+    handleShowPopper: handleShowPopper({ props, state }),
+    handleClosePopper: handleClosePopper({ api, props, state }),
+    bindEvent: bindEvent({ api, state, vm }),
+    focusHandler: focusHandler({ slots, api })
+  })
+
+  watch(() => state.focusing, api.watchFocusing)
+
+  watch(
+    () => props.modelValue,
+    (val) => nextTick(() => props.manual && (state.showPopper = val))
+  )
+
+  onMounted(api.bindPopper)
+
+  vm.$on('tooltip-update', api.bindPopper)
+
+  onUnmounted(api.destroyed)
+
+  return api
+}
