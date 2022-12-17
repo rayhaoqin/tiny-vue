@@ -8,6 +8,7 @@ const { getAllModules } = require('../build/module-utils')
 
 const pathJoin = (...args) => path.join(__dirname, ...args)
 const components = getAllModules(false)
+
 const doComponents = (alias = {}) => {
   components.forEach((item) => {
     alias[item.libName] = pathJoin('../', item.path)
@@ -17,6 +18,10 @@ const doComponents = (alias = {}) => {
       alias[`@opentiny/vue-theme-mobile/${item.LowerName}/index.css`] = pathJoin(`../../tiny-vue-theme-mobile/src/${item.LowerName}/index.less`)
     }
   })
+  alias[`@opentiny/vue-theme/svg/index.css`] = pathJoin(`../../tiny-vue-theme/src/svg/index.less`)
+  alias[`@opentiny/vue-theme/common/index.css`] = pathJoin(`../../tiny-vue-theme/src/common/index.less`)
+  alias[`@opentiny/vue-theme/base/index.css`] = pathJoin(`../../tiny-vue-theme/src/base/index.less`)
+  alias[`@opentiny/vue-theme/tall-storage/index.css`] = pathJoin(`../../tiny-vue-theme/src/tall-storage/index.less`)
   return alias
 }
 const config = {
@@ -55,6 +60,8 @@ const config = {
       '@opentiny/vue-common/adapter/vue2': pathJoin('../../tiny-vue/packages/common/adapter/vue3'),
       '@opentiny/vue-common': pathJoin('../../tiny-vue/packages/common'),
       '@opentiny/vue-renderless': pathJoin('../../tiny-vue-renderless/src'),
+      '@opentiny/vue-theme/svgs': pathJoin('../../tiny-vue-theme/src/svgs'),
+      '@opentiny/vue-theme/images': pathJoin('../../tiny-vue-theme/src/images'),
       '@opentiny/vue-icon': pathJoin('../../tiny-vue/packages/icon/index.js'),
       ...doComponents()
     }

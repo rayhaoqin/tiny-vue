@@ -1,4 +1,12 @@
 {
   "name": "root",
-  "private": true
+  "private": true,
+  "scripts": {
+    "dev:vue2": "pnpm --filter @opentiny/vue dev:vue2",
+    "build:vue2": "pnpm --filter @opentiny/vue dev:vue2",
+    "release2": "pnpm --filter @opentiny/vue dev:vue2",
+    "dev:vue3": "pnpm --filter @opentiny/vue dev:vue3",
+    "build:vue3": "pnpm --filter @opentiny/vue build:vue3",
+    "release3": "pnpm --filter @opentiny/vue release3"
+  }
 }
