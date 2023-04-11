@@ -142,8 +142,6 @@ export const addToRight = ({ emit, refs, props, state, Tree }) => (value) => {
 
     if (props.render && props.render.plugin.name === Tree) {
       if (!props.treeOp.checkStrictly) {
-        currentValue = refs.leftPanel.$refs.plugin.getCheckedKeys()
-      } else {
         state.leftChecked.forEach((item) => !currentValue.includes(item) && currentValue.push(item))
       }
     } else {
@@ -253,9 +251,9 @@ export const sortableEvent = ({ api, droppanel, props, queryDom, refs }) => () =
   }
 }
 
-export const getLeftCheckedData = ({ props, state }) => () => state.sourceData.filter((item) => !item[props.props.disabled])
+export const getLeftCheckedData = ({ props, state }) => () => state.sourceData.filter((item) => item)
 
-export const getRightCheckedData = ({ props, state }) => () => state.targetData.filter((item) => !item[props.props.disabled])
+export const getRightCheckedData = ({ props, state }) => () => state.targetData.filter((item) => item)
 
 export const recursiveData = ({ api, props, state }) => (data, isCasader, sign) => {
   const propChildren = (props.treeOp && props.treeOp.props && props.treeOp.props.children) || 'children'
