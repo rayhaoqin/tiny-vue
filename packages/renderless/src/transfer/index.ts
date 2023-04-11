@@ -142,8 +142,6 @@ export const addToRight = ({ emit, refs, props, state, Tree }) => (value) => {
 
     if (props.render && props.render.plugin.name === Tree) {
       if (!props.treeOp.checkStrictly) {
-        currentValue = refs.leftPanel.$refs.plugin.getCheckedKeys()
-      } else {
         state.leftChecked.forEach((item) => !currentValue.includes(item) && currentValue.push(item))
       }
     } else {
